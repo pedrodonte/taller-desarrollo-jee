@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<title>Push</title>
+</h:head>
+
+<h:body>
+
+	<h:form id="form">
+		<h:outputText id="out" value="#{globalCounter.count}" />
+		<p:commandButton value="Click"
+			actionListener="#{globalCounter.increment}" />
+	</h:form>
+	<p:socket channel="/counter" onMessage="handleMessage">
+		<p:ajax event="message" update="form:out" />
+	</p:socket>
+
+	<script type="text/javascript">
+		function handleMessage(data) {
+			$('.form:out').html(data);
+		}
+	</script>
+
+</h:body>
+</html>

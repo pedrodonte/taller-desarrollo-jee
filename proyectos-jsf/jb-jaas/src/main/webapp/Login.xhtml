@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+
+	<h:form>
+
+		<p:panelGrid columns="2">
+			<h:outputText value="RUN" />
+			<p:inputText styleClass="span2"
+				value="#{loginMB.cpoRunDV}" required="true" />
+				
+			<h:outputText value="PWD" />
+			<p:password  value="#{loginMB.cpoContrasena}"
+				required="true" />
+				
+			<h:outputText value="" />
+			<p:commandButton actionListener="#{loginMB.doLogin}"
+				update="msgLogin" value="Login" />
+		</p:panelGrid>
+
+		<p:messages id="msgLogin" showDetail="true" showSummary="false" />
+
+	</h:form>
+
+</h:body>
+</html>

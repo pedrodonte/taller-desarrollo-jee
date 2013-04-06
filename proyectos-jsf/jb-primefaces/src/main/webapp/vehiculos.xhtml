@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<title>VEHICULOS</title>
+</h:head>
+
+<h:body>
+
+	<h:form id="form1">
+		<p:commandButton value="Index" action="index?faces-redirect=true" />
+
+		<p:messages autoUpdate="true" showDetail="true" showSummary="true" />
+
+		<p:dataTable id="tablaRegistros"
+			value="#{mantenedorVehiculosMB.registros}" var="item"
+			styleClass="tablaRegistros" rowKey="#{item.modelo}"
+			selectionMode="single"
+			selection="#{mantenedorVehiculosMB.registroSeleccionado}">
+
+			<p:ajax event="rowSelect" update="@this" />
+
+			<f:facet name="header">
+				<div class="btn-group">
+					<p:commandButton value="Ver" oncomplete="dialogoEditor.show();"
+						update=":form1:editorRegistro" process="@this"
+						actionListener="#{mantenedorVehiculosMB.doVerRegistroFormulario}" />
+
+					<p:commandButton value="Editar" oncomplete="dialogoEditor.show();"
+						update=":form1:editorRegistro" process="@this"
+						actionListener="#{mantenedorVehiculosMB.doEditarRegistroFormulario}" />
+
+				</div>
+			</f:facet>
+
+			<p:column>
+				<f:facet name="header">Nombre</f:facet>
+				<h:outputText value="#{item.modelo}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">Tipo</f:facet>
+				<h:outputText value="#{item.tipoVehiculo.descripcion}" />
+			</p:column>
+
+			<f:facet name="footer">
+				<h:outputText value="#{mantenedorVehiculosMB.registroSeleccionado}" />
+			</f:facet>
+		</p:dataTable>
+
+		<h:outputText
+			value="#{mantenedorVehiculosMB.registros.size()} perfiles registrados." />
+		<br />
+
+		<p:dialog id="editorRegistro" header="Detalle del Registro"
+			width="800" widgetVar="dialogoEditor" resizable="false" modal="true"
+			showEffect="clip" hideEffect="fold">
+
+			<p:messages autoUpdate="true" showDetail="true" showSummary="false" />
+
+			<h:outputText value="(*) Campos Obligatorios" /> <br />
+			<h:outputText value="modo:#{mantenedorVehiculosMB.modo}" /> <br />
+
+			<p:panelGrid columns="2" styleClass="registro-formulario"
+				rendered="#{mantenedorVehiculosMB.mostrarFormulario == true}">
+
+				<h:outputText value="Modelo (*)" />
+				<p:inputText
+					value="#{mantenedorVehiculosMB.registroEnEdicion.modelo}"
+					required="true" requiredMessage="Debe ingresar un Texto"
+					disabled="#{mantenedorVehiculosMB.modo eq 'OFF'}" />
+
+
+				<f:facet name="footer">
+					<p:commandButton id="btncancel" value="Cancelar"
+						update="@(.tablaRegistros)" oncomplete="dialogoEditor.hide();"
+						actionListener="#{mantenedorVehiculosMB.doCancelarRegistroFormulario}"
+						process="@none" rendered="#{mantenedorVehiculosMB.modo ne 'OFF'}" />
+
+					<p:commandButton id="btnsave" value="Guardar"
+						update="@(.tablaRegistros)"
+						actionListener="#{mantenedorVehiculosMB.doGuardarRegistroFormulario}"
+						rendered="#{mantenedorVehiculosMB.modo ne 'OFF'}" />
+
+					<p:commandButton id="btnedit" value="Habilitar Edición"
+						actionListener="#{mantenedorVehiculosMB.doHabilitarEdicion}"
+						update="@(.registro-formulario)" 
+						rendered="#{mantenedorVehiculosMB.modo eq 'OFF'}" />
+				</f:facet>
+			</p:panelGrid>
+
+		</p:dialog>
+
+	</h:form>
+
+</h:body>
+</html>
