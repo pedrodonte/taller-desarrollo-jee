@@ -5,13 +5,15 @@ import java.io.Serializable;
 public class Vehiculo implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
+	private int idVehiculo;
 	private String modelo;
 	private TipoVehiculo tipoVehiculo;
 	
 	public Vehiculo(){}
 
-	public Vehiculo(String modelo, TipoVehiculo tipoVehiculo) {
+	public Vehiculo(int id, String modelo, TipoVehiculo tipoVehiculo) {
 		super();
+		this.idVehiculo = id;
 		this.modelo = modelo;
 		this.tipoVehiculo = tipoVehiculo;
 	}
@@ -42,6 +44,7 @@ public class Vehiculo implements Serializable, Cloneable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + idVehiculo;
 		result = prime * result + ((modelo == null) ? 0 : modelo.hashCode());
 		result = prime * result
 				+ ((tipoVehiculo == null) ? 0 : tipoVehiculo.hashCode());
@@ -57,6 +60,8 @@ public class Vehiculo implements Serializable, Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		Vehiculo other = (Vehiculo) obj;
+		if (idVehiculo != other.idVehiculo)
+			return false;
 		if (modelo == null) {
 			if (other.modelo != null)
 				return false;
@@ -72,8 +77,16 @@ public class Vehiculo implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Vehiculo [modelo=" + modelo + ", tipoVehiculo=" + tipoVehiculo
-				+ "]";
+		return "Vehiculo [idVehiculo=" + idVehiculo + ", modelo=" + modelo
+				+ ", tipoVehiculo=" + tipoVehiculo + "]";
+	}
+
+	public int getIdVehiculo() {
+		return idVehiculo;
+	}
+
+	public void setIdVehiculo(int idVehiculo) {
+		this.idVehiculo = idVehiculo;
 	}
 	
 }

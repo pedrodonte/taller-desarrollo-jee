@@ -11,49 +11,6 @@
 		<jboss.bom.version>1.0.0.M10</jboss.bom.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill 
-				of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
-				of artifacts. We use this here so that we always get the correct versions 
-				of artifacts. Here we use the jboss-javaee-6.0-with-tools stack (you can 
-				read this as the JBoss stack of the Java EE 6 APIs, with some extras tools 
-				for your project, such as Arquillian for testing), the jboss-javaee-6.0-with-hibernate 
-				stack (you can read this as the JBoss stack of the Java EE 6 APIs, with extras 
-				from the Hibernate family of projects) and the jboss-javaee-6.0-with-errai 
-				stack (you can read this as the JBoss stack of the Java EE 6 APIs, with support 
-				for Errai) -->
-			<dependency>
-				<groupId>org.jboss.bom</groupId>
-				<artifactId>jboss-javaee-6.0-with-tools</artifactId>
-				<version>${jboss.bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.bom</groupId>
-				<artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
-				<version>${jboss.bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.5.6</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.6</version>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
-
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -73,9 +30,19 @@
 						<skipTests>true</skipTests>
 					</configuration>
 				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
+	<modules>
+		<module>jb-jaas</module>
+		<module>jb-jms</module>
+		<module>jb-primefaces</module>
+		<module>jb-push</module>
+	</modules>
 
 </project>

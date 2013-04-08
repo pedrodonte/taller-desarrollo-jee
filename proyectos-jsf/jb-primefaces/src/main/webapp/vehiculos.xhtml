@@ -12,6 +12,14 @@
 
 <h:body>
 
+	<script type="text/javascript">
+		function handleActionRequest(xhr, status, args) {
+			if (args.codExitoOperacion) {
+				dialogoEditor.hide();
+			}
+		}
+	</script>
+
 	<h:form id="form1">
 		<p:commandButton value="Index" action="index?faces-redirect=true" />
 
@@ -19,7 +27,7 @@
 
 		<p:dataTable id="tablaRegistros"
 			value="#{mantenedorVehiculosMB.registros}" var="item"
-			styleClass="tablaRegistros" rowKey="#{item.modelo}"
+			styleClass="tablaRegistros" rowKey="#{item.idVehiculo}"
 			selectionMode="single"
 			selection="#{mantenedorVehiculosMB.registroSeleccionado}">
 
@@ -42,7 +50,7 @@
 				<f:facet name="header">Nombre</f:facet>
 				<h:outputText value="#{item.modelo}" />
 			</p:column>
-			
+
 			<p:column>
 				<f:facet name="header">Tipo</f:facet>
 				<h:outputText value="#{item.tipoVehiculo.descripcion}" />
@@ -53,18 +61,18 @@
 			</f:facet>
 		</p:dataTable>
 
-		<h:outputText
-			value="#{mantenedorVehiculosMB.registros.size()} perfiles registrados." />
 		<br />
 
 		<p:dialog id="editorRegistro" header="Detalle del Registro"
-			width="800" widgetVar="dialogoEditor" resizable="false" modal="true"
+			widgetVar="dialogoEditor" resizable="false" modal="true"
 			showEffect="clip" hideEffect="fold">
 
 			<p:messages autoUpdate="true" showDetail="true" showSummary="false" />
 
-			<h:outputText value="(*) Campos Obligatorios" /> <br />
-			<h:outputText value="modo:#{mantenedorVehiculosMB.modo}" /> <br />
+			<h:outputText value="(*) Campos Obligatorios" />
+			<br />
+			<h:outputText value="modo:#{mantenedorVehiculosMB.modo}" />
+			<br />
 
 			<p:panelGrid columns="2" styleClass="registro-formulario"
 				rendered="#{mantenedorVehiculosMB.mostrarFormulario == true}">
@@ -75,6 +83,16 @@
 					required="true" requiredMessage="Debe ingresar un Texto"
 					disabled="#{mantenedorVehiculosMB.modo eq 'OFF'}" />
 
+				<h:outputText value="Tipo Vehiculo (*)" />
+				<p:selectOneMenu value="#{mantenedorVehiculosMB.registroEnEdicion.tipoVehiculo}"
+					converter="#{tipoVehiculoConverter}">
+
+					<f:selectItem itemLabel="Seleccione un Registro" itemValue="" />
+					<f:selectItems value="#{mantenedorVehiculosMB.tiposVehiculos}"
+						var="item" itemLabel="#{item.descripcion}"	itemValue="#{item}" />
+
+				</p:selectOneMenu>
+
 
 				<f:facet name="footer">
 					<p:commandButton id="btncancel" value="Cancelar"
@@ -84,12 +102,13 @@
 
 					<p:commandButton id="btnsave" value="Guardar"
 						update="@(.tablaRegistros)"
+						oncomplete="handleActionRequest(xhr, status, args)"
 						actionListener="#{mantenedorVehiculosMB.doGuardarRegistroFormulario}"
 						rendered="#{mantenedorVehiculosMB.modo ne 'OFF'}" />
 
 					<p:commandButton id="btnedit" value="Habilitar Edición"
 						actionListener="#{mantenedorVehiculosMB.doHabilitarEdicion}"
-						update="@(.registro-formulario)" 
+						update="@(.registro-formulario)"
 						rendered="#{mantenedorVehiculosMB.modo eq 'OFF'}" />
 				</f:facet>
 			</p:panelGrid>

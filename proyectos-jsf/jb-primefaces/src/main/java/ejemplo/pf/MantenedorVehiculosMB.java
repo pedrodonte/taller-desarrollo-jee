@@ -12,23 +12,25 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
+import ejemplo.datos.TipoVehiculo;
 import ejemplo.datos.Vehiculo;
 import ejemplo.datos.VehiculoServiceEJB;
 
 @ManagedBean
 @ViewScoped
-public class MantenedorVehiculosMB implements Serializable{
-	
+public class MantenedorVehiculosMB implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
-	@EJB VehiculoServiceEJB registroServiceEJB;
+
+	@EJB
+	VehiculoServiceEJB registroServiceEJB;
 
 	Logger logger = Logger.getLogger(getClass());
 
 	public enum ModosEdicion {
 		OFF, EDIT, NEW
 	};
-	
+
 	private boolean mostrarFormulario = false;
 	private ModosEdicion modo = ModosEdicion.OFF;
 
@@ -36,16 +38,23 @@ public class MantenedorVehiculosMB implements Serializable{
 	private Vehiculo registroSeleccionado = new Vehiculo();
 	private Vehiculo registroEnEdicion = new Vehiculo();
 
+	MensajesMB mensajesMB = new MensajesMB();
+	
+	//Colecciones adicionales
+	private List<TipoVehiculo> tiposVehiculos = new ArrayList<>();
+
 	@PostConstruct
 	public void inicializarVariablesInstancia() {
 		try {
 			registros = registroServiceEJB.obtenerVehiculos();
-			logger.debug(registros.size() + " registros de Usuario.");
+			logger.info(registros.size() + " registros de Usuario.");
+			
+			tiposVehiculos = registroServiceEJB.obtenerTipos();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void doHabilitarEdicion(ActionEvent event) {
 		setMostrarFormulario(true);
 		setModo(ModosEdicion.EDIT);
@@ -61,7 +70,10 @@ public class MantenedorVehiculosMB implements Serializable{
 		setModo(ModosEdicion.OFF);
 	}
 
-	/**ESTE METODO NO APLICA PARA EL MANTENEDOR DE PERFILES, YA QUE NO SE PERMITE CREAR NUEVOS.*/
+	/**
+	 * ESTE METODO NO APLICA PARA EL MANTENEDOR DE PERFILES, YA QUE NO SE
+	 * PERMITE CREAR NUEVOS.
+	 */
 	public void doNuevoRegistroFormulario(ActionEvent event) {
 		setRegistroEnEdicion(new Vehiculo());
 		setMostrarFormulario(true);
@@ -71,7 +83,7 @@ public class MantenedorVehiculosMB implements Serializable{
 	public void doEditarRegistroFormulario(ActionEvent event) {
 		try {
 			setRegistroEnEdicion((Vehiculo) registroSeleccionado.clone());
-			logger.debug("Editando " + getRegistroEnEdicion());
+			logger.info("Editando " + getRegistroEnEdicion());
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -80,23 +92,24 @@ public class MantenedorVehiculosMB implements Serializable{
 	}
 
 	public void doGuardarRegistroFormulario(ActionEvent event) {
-		//boolean codExitoOperacion = false;
+		boolean codExitoOperacion = false;
 		try {
-			logger.debug("Guardano Registro: " + registroEnEdicion);
+			logger.info("Guardano Cambios en Registro: " + registroEnEdicion);
 			if (modo.equals(ModosEdicion.EDIT)) {
-				//TODO
+				registroServiceEJB.actualizarVehiculo(registroEnEdicion);
+				registros = registroServiceEJB.obtenerVehiculos();
 			} else {
-				logger.debug("Nada con Registro: " + registroEnEdicion);
+				logger.info("Nada con Registro: " + registroEnEdicion);
 			}
 			setMostrarFormulario(false);
 			setModo(ModosEdicion.OFF);
 			inicializarVariablesInstancia();
-			//codExitoOperacion = true;
-			
+			codExitoOperacion = true;
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			mensajesMB.mensajeStringFatal(e.getMessage());
 		}
-		//TODO cuando termina la operacion se debe retornar un codigo de operacion (codExitoOperacion)
+		mensajesMB.devolverParametro("codExitoOperacion", codExitoOperacion);
 	}
 
 	public void doCancelarRegistroFormulario(ActionEvent event) {
@@ -128,13 +141,12 @@ public class MantenedorVehiculosMB implements Serializable{
 		this.registros = registros;
 	}
 
-
 	public Vehiculo getRegistroSeleccionado() {
 		return registroSeleccionado;
 	}
 
 	public void setRegistroSeleccionado(Vehiculo registroSeleccionado) {
-		logger.debug("Registro Seleccionado:"+registroSeleccionado);
+		logger.info("Registro Seleccionado:" + registroSeleccionado);
 		this.registroSeleccionado = registroSeleccionado;
 	}
 
@@ -144,6 +156,14 @@ public class MantenedorVehiculosMB implements Serializable{
 
 	public void setRegistroEnEdicion(Vehiculo registroEnEdicion) {
 		this.registroEnEdicion = registroEnEdicion;
+	}
+
+	public List<TipoVehiculo> getTiposVehiculos() {
+		return tiposVehiculos;
+	}
+
+	public void setTiposVehiculos(List<TipoVehiculo> tiposVehiculos) {
+		this.tiposVehiculos = tiposVehiculos;
 	}
 
 }
