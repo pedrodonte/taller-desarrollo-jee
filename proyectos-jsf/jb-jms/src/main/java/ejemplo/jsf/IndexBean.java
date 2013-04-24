@@ -13,10 +13,17 @@ public class IndexBean {
 	
 	@EJB ColaServiceEJBImpl colaServiceEJBImpl;
 	
-	public void test(ActionEvent actionEvent){
+	public void msgTexto(ActionEvent actionEvent){
 		
 		String mensaje = new Date().toString();
 		colaServiceEJBImpl.putMessage(mensaje);
+		
+	}
+	
+	public void msgObjeto(ActionEvent actionEvent){
+		
+		colaServiceEJBImpl.putMessage();
+		
 	}
 	
 }

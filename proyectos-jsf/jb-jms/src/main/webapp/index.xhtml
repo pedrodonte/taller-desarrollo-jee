@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+	<meta charset="UTF-8" />
 </h:head>
 
 <h:body>
@@ -15,13 +16,15 @@
 	<h:form>
 		<p:panelGrid columns="2">
 			<f:facet name="header">  
-                Basic PanelGrid  
+                Envio de Mensajes usando JMS
            </f:facet>
+			<p:commandButton value="Enviar Mensaje de Texto"
+				actionListener="#{indexBean.msgTexto}" />
+			<h:outputText value="javax.jms.TextMessage" />
 
-			<p:commandButton value="TestJMS" actionListener="#{indexBean.test}" />
-
-			<h:messages />
-
+			<p:commandButton value="Enviar Mensaje Objeto"
+				actionListener="#{indexBean.msgObjeto}" />
+			<h:outputText value="javax.jms.ObjectMessage" />
 		</p:panelGrid>
 
 	</h:form>
