@@ -22,11 +22,11 @@ import ejemplo.ejb.MiObjetoEnviado;
 
 @ManagedBean
 @ApplicationScoped
-@MessageDriven(name = "EscuchadorMBD", activationConfig = {
+@MessageDriven(name = "EscuchadorColaMBD", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = QUEUE),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
-public class EscuchadorMBD implements MessageListener {
+public class EscuchadorColaMBD implements MessageListener {
 
 	Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
